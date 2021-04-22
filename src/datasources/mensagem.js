@@ -38,3 +38,5 @@ class MensagemAPI extends DataSource {
         }
     }
 }
+
+export default MensagemAPI

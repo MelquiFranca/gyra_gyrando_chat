@@ -4,17 +4,13 @@ const typeDefs = gql`
     type Usuario {
         id: ID!
         nome: String!
-        tipo: Tipo!
+        tipo: Boolean
     }
 
     type Mensagem {
         id: ID!
         conteudo: String!
         usuario: Usuario!
-    }
-    enum Tipo {
-        HOMEM
-        MULHER
     }
     type Query {
         mensagens: [Mensagem]!
@@ -23,7 +19,7 @@ const typeDefs = gql`
     }
     type Mutation {
         novaMensagem(usuarioId: ID!, conteudo: String!): Mensagem
-        login(nome: String!, tipo: Tipo): Usuario
+        login(nome: String!, tipo: Boolean): Usuario
         logoff(usuarioId: ID!): Usuario
     }
 `

@@ -9,7 +9,7 @@ class UsuarioAPI extends DataSource {
     initialize(config) {
         this.context = config.context
     }
-    async criarUsuario({ nome, tipo } = {}) {
+    async pesquisarOuCriarUsuario({ nome, tipo } = {}) {
         if(!nome || !tipo) return null
 
         const usuario = await this.store.usuarios.findOne({nome})
