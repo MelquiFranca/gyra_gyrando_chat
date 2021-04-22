@@ -15,34 +15,34 @@ class UsuarioAPI extends DataSource {
         const usuario = await this.store.usuarios.findOne({nome})
 
         if(usuario) 
-            return this.usuarioReducer(usuario)
+            return this.usuarioReducer(usuario._doc)
 
         const usuarios = await this.store.usuarios.create({
             nome,
             tipo
         })
 
-        return usuarios ? this.usuarioReducer(usuario) : null
+        return usuarios ? this.usuarioReducer(usuario._doc) : null
     }
     async removerUsuario({ id, nome }) { //Definir se irá buscar pelo 'id' ou pelo 'nome' direto
         if(!id) return null
 
         const usuario = await this.store.usuarios.findOneAndDelete({ id })
         return usuario 
-            ? this.usuarioReducer(usuario) 
+            ? this.usuarioReducer(usuario._doc) 
             : null
     }
     async getUsuarios() {
         const usuarios = await this.store.usuarios.find()
         return usuarios
-            ? usuarios.map(usuario => this.usuarioReducer(usuario))
+            ? usuarios.map(usuario => this.usuarioReducer(usuario._doc))
             : []
     }
     usuarioReducer(usuario) {
         return {
             id: usuario._id,
             nome: usuario.nome,
-            tipo: usuario.tipo
+            tipo: usuario.tipo === "true" ? true : false
         }
     }
 }

@@ -10,6 +10,12 @@ const store = createStore({url: 'mongodb://localhost/gyragyrando'})
 const server = new ApolloServer({
     typeDefs,
     resolvers,
+    context: ({ req }) => {
+        const id = req && req.headers.nome || null
+        const nome = req && req.headers.nome || null
+
+        return { id, nome }
+    },
     dataSources: () => ({
         usuarioAPI: new UsuarioAPI({ store }),
         mensagemAPI: new MensagemAPI({ store })
