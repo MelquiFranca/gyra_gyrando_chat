@@ -9,7 +9,7 @@ class UsuarioAPI extends DataSource {
     initialize(config) {
         this.context = config.context
     }
-    async pesquisarOuCriarUsuario({ nome, tipo } = {}) {
+    async loginUsuario({ nome, tipo } = {}) {
         if(!nome || !tipo) return null
 
         const usuario = await this.store.usuarios.findOne({nome})
@@ -24,10 +24,11 @@ class UsuarioAPI extends DataSource {
 
         return usuarios ? this.usuarioReducer(usuario._doc) : null
     }
-    async removerUsuario({ id, nome }) { //Definir se irá buscar pelo 'id' ou pelo 'nome' direto
-        if(!id) return null
+    async logoffUsuario() {
+        const usuarioLogado = this.context.usuario
+        if(!usuarioLogado.id) return null
 
-        const usuario = await this.store.usuarios.findOneAndDelete({ id })
+        const usuario = await this.store.usuarios.findOneAndDelete({ _id: usuarioLogado.id })
         return usuario 
             ? this.usuarioReducer(usuario._doc) 
             : null
