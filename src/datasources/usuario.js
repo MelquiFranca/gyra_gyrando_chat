@@ -12,23 +12,22 @@ class UsuarioAPI extends DataSource {
     async loginUsuario({ nome, tipo } = {}) {
         if(!nome && !tipo) return null
 
-        const usuario = await this.store.usuarios.findOne({nome})
-
-        if(usuario) 
-            return this.usuarioReducer(usuario)
+        const usuarioNomeExistente = await this.store.usuarios.findOne({nome})
+        
+        if(usuarioNomeExistente) return null
 
         const usuarios = await this.store.usuarios.create({
             nome,
             tipo
         })
 
-        return usuarios ? this.usuarioReducer(usuario) : null
+        return usuarios ? this.usuarioReducer(usuarios) : null
     }
     async logoffUsuario({ usuarioId }) {
-        const usuarioLogado = this.context.usuario
-        if(!usuarioLogado.id && usuarioId) return null
+        const usuarioLogado = this.context.usuario?.id
+        if(!usuarioLogado && !usuarioId) return null
 
-        const usuario = await this.store.usuarios.findOneAndDelete({ _id: usuarioLogado.id || usuarioId })
+        const usuario = await this.store.usuarios.findOneAndDelete({ _id: usuarioLogado || usuarioId })
         return usuario 
             ? this.usuarioReducer(usuario) 
             : null
@@ -43,11 +42,11 @@ class UsuarioAPI extends DataSource {
         const usuario = await this.store.usuarios.findOne({_id: id})
         return usuario
     }
-    usuarioReducer(usuario) {
+    usuarioReducer({nome, tipo, _id: id}) {
         return {
-            id: usuario.id,
-            nome: usuario.nome,
-            tipo: usuario.tipo === "true" ? true : false
+            id: id,
+            nome: nome,
+            tipo: tipo === "true" ? true : false
         }
     }
 }

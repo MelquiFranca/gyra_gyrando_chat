@@ -6,7 +6,7 @@ const store = ({ url }) => {
         nome: {
             type: String,
             required: true,
-            // unique: true,
+            unique: true,
         },
         tipo: {
             type: String,

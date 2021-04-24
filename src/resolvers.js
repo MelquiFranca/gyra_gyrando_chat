@@ -14,17 +14,21 @@ export default {
             return dataSources.usuarioAPI.loginUsuario({ nome, tipo })
         },
 
-        novaMensagem: async (_, { usuarioId, conteudo }, { dataSources }) => {
-            const usuario = await dataSources.usuarioAPI.getUsuarioId(usuarioId)
-            // pubsub.publish('NOVA_MENSAGEM', {conteudo, usuario})
-            return dataSources.mensagemAPI.novaMensagem({ usuarioId, conteudo })
+        novaMensagem: (_, { usuarioId, conteudo }, { dataSources }) => {
+            const retorno = dataSources.mensagemAPI.novaMensagem({ usuarioId, conteudo })
+            pubsub.publish('USUARIO_DESLOGADO', retorno)
+            return retorno
         },        
-        logoff: (_, { usuarioId }, { dataSources }) => 
-            dataSources.usuarioAPI.logoffUsuario({usuarioId}),
+        logoff: (_, { usuarioId }, { dataSources }) => {
+            dataSources.usuarioAPI.logoffUsuario({usuarioId})
+        },
     },
     Subscription: {
         entradaUsuario: {
             subscribe:  pubsub.asyncIterator(['USUARIO_LOGADO'])
+        },
+        saidaUsuario: {
+            subscribe:  pubsub.asyncIterator(['USUARIO_DESLOGADO'])
         },
         atualizarMensagens: {
             subscribe:  pubsub.asyncIterator(['NOVA_MENSAGEM'])

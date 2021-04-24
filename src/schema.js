@@ -25,6 +25,7 @@ const typeDefs = gql`
     type Subscription {
         atualizarMensagens: Mensagem
         entradaUsuario: Usuario
+        saidaUsuario: Usuario
     }
 `
 

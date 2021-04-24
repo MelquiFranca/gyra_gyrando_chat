@@ -16,7 +16,7 @@ class MensagemAPI extends DataSource {
         const usuario = await this.store.usuarios.findOne({ _id: usuarioId })
         if(!usuario) return null
 
-        const mensagem = await this.store.mensagens.create({ conteudo, usuarioId: usuario._id })
+        const mensagem = await this.store.mensagens.create({ conteudo, usuarioId: usuario.id })
 
         return  mensagem
             ? this.mensagemReducer({mensagem, usuario})
