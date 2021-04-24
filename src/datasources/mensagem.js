@@ -10,36 +10,35 @@ class MensagemAPI extends DataSource {
         this.context = config.context
     }
 
-    async novaMensagem({ id, conteudo }) {
+    async novaMensagem({ usuarioId, conteudo }) {
         if(!conteudo) return null
 
-        const  usuarioLogado = this.context.usuario
-        const usuario = await this.store.usuario.findOne({ _id: id })
-        
-        if(!usuarioLogado && !usuario) return null
-        
+        const usuario = await this.store.usuarios.findOne({ _id: usuarioId })
         if(!usuario) return null
-        
-        const mensagem = await this.store.mensagens.create({ conteudo, usuario: usuario || usuarioLogado })
+
+        const mensagem = await this.store.mensagens.create({ conteudo, usuarioId: usuario._id })
 
         return  mensagem
-            ? this.mensagemReduce(mensagem._doc)
+            ? this.mensagemReducer({mensagem, usuario})
             : null
     }
     async getMensagens() {
         const mensagens = await this.store.mensagens.find()
         return mensagens
-            ? mensagens.map(mensagem => this.mensagemReducer(mensagem._doc))
+            ? mensagens.map(async mensagem => {
+                const usuario = await this.store.usuarios.findOne({  _id: mensagem.usuarioId })
+                return this.mensagemReducer({mensagem, usuario})
+            })
             : []
     }
-    mensagemReducer(mensagem) {
+    mensagemReducer({mensagem, usuario}) {
         return {
-            id: mensagem._id,
+            id: mensagem.id,
             conteudo: mensagem.conteudo,
             usuario: {
-                id: mensagem.usuario._id,
-                nome: mensagem.usuario.nome,
-                tipo: mensagem.usuario.tipo,
+                id: usuario.id,
+                nome: usuario.nome,
+                tipo: usuario.tipo,
             }
         }
     }

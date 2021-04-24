@@ -6,7 +6,7 @@ const store = ({ url }) => {
         nome: {
             type: String,
             required: true,
-            unique: true,
+            // unique: true,
         },
         tipo: {
             type: String,
@@ -20,12 +20,9 @@ const store = ({ url }) => {
             type: String,
             required: true,
         },
-        usuario: {
-            type: usuarioSchema,
-            default: {
-                nome: 'Usuário deslogado',
-                tipo: 'Não definido'
-            }
+        usuarioId: {
+            type: mongoose.SchemaTypes.ObjectId,
+            required: true,
         }        
     })    
     const mensagens = mongoose.model('Mensagens', mensagemSchema)

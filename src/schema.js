@@ -22,6 +22,10 @@ const typeDefs = gql`
         login(nome: String!, tipo: Boolean!): Usuario
         logoff(usuarioId: ID!): Usuario
     }
+    type Subscription {
+        atualizarMensagens: Mensagem
+        entradaUsuario: Usuario
+    }
 `
 
 export default typeDefs

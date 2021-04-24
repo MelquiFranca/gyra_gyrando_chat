@@ -1,3 +1,7 @@
+import { PubSub } from "graphql-subscriptions"
+
+const pubsub = new PubSub()
+
 export default {
     Query: {
         mensagens: (_, __, { dataSources }) => dataSources.mensagemAPI.getMensagens(),
@@ -5,13 +9,25 @@ export default {
         me: (_, __, { dataSources }) => dataSources.usuarioAPI.loginUsuario(),
     },
     Mutation: {
-        login: (_, { nome, tipo }, { dataSources }) => 
-            dataSources.usuarioAPI.pesquisarOuCriarUsuario({ nome, tipo }),
+        login: (_, { nome, tipo }, { dataSources }) => {
+            pubsub.publish('USUARIO_LOGADO', { entradaUsuario: { nome, tipo } })
+            return dataSources.usuarioAPI.loginUsuario({ nome, tipo })
+        },
 
-        novaMensagem: (_, { usuarioId, conteudo }, { dataSources }) => 
-            dataSources.mensagemAPI.novaMensagem({ id: usuarioId, conteudo }),
-        
-        logoff: (_, __, { dataSources }) => 
-            dataSources.usuarioAPI.logoffUsuario(),
+        novaMensagem: async (_, { usuarioId, conteudo }, { dataSources }) => {
+            const usuario = await dataSources.usuarioAPI.getUsuarioId(usuarioId)
+            // pubsub.publish('NOVA_MENSAGEM', {conteudo, usuario})
+            return dataSources.mensagemAPI.novaMensagem({ usuarioId, conteudo })
+        },        
+        logoff: (_, { usuarioId }, { dataSources }) => 
+            dataSources.usuarioAPI.logoffUsuario({usuarioId}),
+    },
+    Subscription: {
+        entradaUsuario: {
+            subscribe:  pubsub.asyncIterator(['USUARIO_LOGADO'])
+        },
+        atualizarMensagens: {
+            subscribe:  pubsub.asyncIterator(['NOVA_MENSAGEM'])
+        },
     }
 }

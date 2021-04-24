@@ -29,7 +29,10 @@ const server = new ApolloServer({
     dataSources: () => ({
         usuarioAPI: new UsuarioAPI({ store }),
         mensagemAPI: new MensagemAPI({ store })
-    })
+    }),
+    subscriptions: {
+        path: '/assinaturas'
+    },    
 })
 
 server.listen({port: 4001}).then((data) => {
