@@ -11,7 +11,8 @@ export default {
     Mutation: {
         login: async (_, { nome, tipo }, { dataSources }) => {
             const retorno = await dataSources.usuarioAPI.loginUsuario({ nome, tipo })
-            return pubsub.publish('USUARIO_LOGADO', { entradaUsuario: retorno })
+            pubsub.publish('USUARIO_LOGADO', { entradaUsuario: retorno })
+            return retorno
         },
 
         novaMensagem: async(_, { usuarioId, conteudo }, { dataSources }) => {
