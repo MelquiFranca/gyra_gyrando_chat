@@ -11,20 +11,25 @@ const store = ({ url }) => {
         tipo: {
             type: String,
             required: true
-        }
+        },
     })
     const usuarios = mongoose.model('Usuarios', usuarioSchema)
 
-    const mensagemSchema = new mongoose.Schema({
-        conteudo: {
-            type: String,
-            required: true,
+    const mensagemSchema = new mongoose.Schema(
+        {
+            conteudo: {
+                type: String,
+                required: true,
+            },
+            usuarioId: {
+                type: mongoose.SchemaTypes.ObjectId,
+                required: true,
+            }        
         },
-        usuarioId: {
-            type: mongoose.SchemaTypes.ObjectId,
-            required: true,
-        }        
-    })    
+        { 
+            timestamps: { createdAt: 'created_at' }
+        }
+    )    
     const mensagens = mongoose.model('Mensagens', mensagemSchema)
 
     return {

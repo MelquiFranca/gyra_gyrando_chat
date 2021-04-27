@@ -26,15 +26,16 @@ class MensagemAPI extends DataSource {
         const mensagens = await this.store.mensagens.find()
         return mensagens
             ? mensagens.map(async mensagem => {
-                const usuario = await this.store.usuarios.findOne({  _id: mensagem.usuarioId })
-                return this.mensagemReducer({mensagem, usuario})
+                const usuario = await this.store.usuarios.findOne({  _id: mensagem.usuarioId }).sort({created_at:-1})
+                return this.mensagemReducer({mensagem, usuario: usuario || {id: '0', nome: 'Não identificado', tipo: null}})
             })
             : []
     }
     mensagemReducer({mensagem, usuario}) {
         return {
-            id: mensagem.id,
+            id: mensagem._id,
             conteudo: mensagem.conteudo,
+            data: mensagem.created_at,
             usuario: {
                 id: usuario.id,
                 nome: usuario.nome,

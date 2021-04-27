@@ -11,6 +11,7 @@ const typeDefs = gql`
         id: ID!
         conteudo: String!
         usuario: Usuario!
+        data: String!
     }
     type Query {
         mensagens: [Mensagem]!
