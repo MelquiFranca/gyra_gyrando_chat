@@ -9,11 +9,16 @@ class UsuarioAPI extends DataSource {
     initialize(config) {
         this.context = config.context
     }
-    async loginUsuario({ nome, tipo } = {}) {
+    async loginUsuario({ id=null, nome, tipo } = {}) {
         if(!nome && !tipo) return null
-
-        const usuarioNomeExistente = await this.store.usuarios.findOne({nome})
         
+        if(id) {
+            const usuarioIdExistente = await this.store.usuarios.findOne({_id: id})
+            if(usuarioIdExistente)
+                return this.usuarioReducer(usuarioIdExistente) || null
+        }
+
+        const usuarioNomeExistente = await this.store.usuarios.findOne({nome})        
         if(usuarioNomeExistente) return null
 
         const usuarios = await this.store.usuarios.create({

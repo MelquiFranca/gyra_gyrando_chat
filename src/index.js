@@ -8,7 +8,7 @@ import resolvers from './resolvers.js'
 
 dotenv.config()
 
-const store = createStore({url: 'mongodb://localhost/gyragyrando'})
+const store = createStore({url: process.env.CONNECTION || 'mongodb://localhost/gyragyrando'})
 
 const server = new ApolloServer({
     typeDefs,

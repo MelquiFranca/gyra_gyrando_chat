@@ -9,8 +9,8 @@ export default {
         me: (_, __, { dataSources }) => dataSources.usuarioAPI.loginUsuario(),
     },
     Mutation: {
-        login: async (_, { nome, tipo }, { dataSources }) => {
-            const retorno = await dataSources.usuarioAPI.loginUsuario({ nome, tipo })
+        login: async (_, { id, nome, tipo }, { dataSources }) => {
+            const retorno = await dataSources.usuarioAPI.loginUsuario({ id, nome, tipo })
             pubsub.publish('USUARIO_LOGADO', { entradaUsuario: retorno })
             return retorno
         },
@@ -21,7 +21,7 @@ export default {
         },        
         logoff: async (_, { usuarioId }, { dataSources }) => {
             const retorno = await dataSources.usuarioAPI.logoffUsuario({usuarioId})
-            return pubsub.publish('USUARIO_DESLOGADO', retorno)
+            return pubsub.publish('USUARIO_DESLOGADO', {saidaUsuario: retorno})
         },
     },
     Subscription: {

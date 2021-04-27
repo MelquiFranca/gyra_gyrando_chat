@@ -19,7 +19,7 @@ const typeDefs = gql`
     }
     type Mutation {
         novaMensagem(usuarioId: ID, conteudo: String!): Mensagem
-        login(nome: String!, tipo: Boolean!): Usuario
+        login(nome: String!, tipo: Boolean!, id: ID): Usuario
         logoff(usuarioId: ID!): Usuario
     }
     type Subscription {
